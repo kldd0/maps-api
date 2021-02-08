@@ -17,6 +17,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.spn = 0.01
         self.ll = [37.617635, 55.755814]
+        self.map_view.addItems(['схема', 'спутник', 'гибрид'])
         self.map_params = {'ll': f'{self.ll[0]},{self.ll[1]}',
                            'l': 'map',
                            'size': '600,400',
@@ -24,6 +25,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                            }
         self.pixmap = QPixmap()
         self.load_map()
+        self.map_view.activated[str].connect(self.change_map_view)
 
     def load_map(self):
         response = requests.get(MAP_API_SERVER, params=self.map_params)
@@ -57,6 +59,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.ll[1] -= self.spn
             self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
             self.load_map()
+
+    def change_map_view(self, text):
+        if text == 'схема':
+            self.map_params['l'] = 'map'
+        elif text == 'спутник':
+            self.map_params['l'] = 'sat'
+        else:
+            self.map_params['l'] = 'sat,skl'
+        self.load_map()
 
 
 if __name__ == '__main__':
