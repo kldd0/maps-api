@@ -15,10 +15,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.map_params = {'ll': '37.617635,55.755814',
+        self.spn = 0.01
+        self.ll = [37.617635, 55.755814]
+        self.map_params = {'ll': f'{self.ll[0]},{self.ll[1]}',
                            'l': 'map',
-                           'z': 14,
-                           'size': '600,400'
+                           'size': '600,400',
+                           'spn': f'{self.spn},{self.spn}'
                            }
         self.pixmap = QPixmap()
         self.load_map()
@@ -30,13 +32,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_PageUp:
-            if self.map_params['z'] < 17:
-                self.map_params['z'] += 1
+            if self.spn > 0.0001:
+                self.spn *= 0.1
+                self.map_params['spn'] = f'{self.spn},{self.spn}'
                 self.load_map()
-        if event.key() == Qt.Key_PageDown:
-            if self.map_params['z'] > 2:
-                self.map_params['z'] -= 1
+        elif event.key() == Qt.Key_PageDown:
+            if self.spn < 1:
+                self.spn /= 0.1
+                self.map_params['spn'] = f'{self.spn},{self.spn}'
                 self.load_map()
+        elif event.key() == Qt.Key_Left:
+            self.ll[0] -= self.spn
+            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+            self.load_map()
+        elif event.key() == Qt.Key_Right:
+            self.ll[0] += self.spn
+            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+            self.load_map()
+        elif event.key() == Qt.Key_Up:
+            self.ll[1] += self.spn
+            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+            self.load_map()
+        elif event.key() == Qt.Key_Down:
+            self.ll[1] -= self.spn
+            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+            self.load_map()
 
 
 if __name__ == '__main__':
