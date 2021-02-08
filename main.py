@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from ui import Ui_MainWindow
 
 MAP_API_SERVER = 'http://static-maps.yandex.ru/1.x/'
+GEOCODE_API_KEY = "40d1649f-0493-4b70-98ba-98533de7710b"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -26,6 +27,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pixmap = QPixmap()
         self.load_map()
         self.map_view.activated[str].connect(self.change_map_view)
+        self.search.clicked.connect(self.find_object)
 
     def load_map(self):
         response = requests.get(MAP_API_SERVER, params=self.map_params)
@@ -68,6 +70,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.map_params['l'] = 'sat,skl'
         self.load_map()
+
+    def find_object(self):
+        value = self.text_query.text()
+        geocoder_request = f'http://geocode-maps.yandex.ru/1.x/?apikey={GEOCODE_API_KEY}&geocode={value}&format=json'
+        resp = requests.get(geocoder_request)
+        if not resp:
+            print("Ошибка выполнения запроса:")
+            print(geocoder_request)
+            print("Http статус:", resp.status_code, "(", resp.reason, ")")
+        else:
+            json_resp = resp.json()
+            obj = json_resp['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']
+            obj_coords = obj["Point"]["pos"].split()
+            self.map_params['ll'] = ','.join(obj_coords)
+            self.map_params['pt'] = ','.join([obj_coords[0], obj_coords[1], 'pm2rdm'])
+            self.load_map()
 
 
 if __name__ == '__main__':

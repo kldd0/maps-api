@@ -23,6 +23,12 @@ class Ui_MainWindow(object):
         self.map_view = QtWidgets.QComboBox(self.centralwidget)
         self.map_view.setGeometry(QtCore.QRect(640, 10, 131, 21))
         self.map_view.setObjectName("map_view")
+        self.search = QtWidgets.QPushButton(self.centralwidget)
+        self.search.setGeometry(QtCore.QRect(10, 470, 131, 41))
+        self.search.setObjectName("search")
+        self.text_query = QtWidgets.QLineEdit(self.centralwidget)
+        self.text_query.setGeometry(QtCore.QRect(10, 430, 271, 31))
+        self.text_query.setObjectName("text_query")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -31,3 +37,4 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Большая задача по Maps API"))
+        self.search.setText(_translate("MainWindow", "Искать"))
