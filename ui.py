@@ -34,6 +34,9 @@ class Ui_MainWindow(object):
         self.reset_btn = QtWidgets.QPushButton(self.centralwidget)
         self.reset_btn.setGeometry(QtCore.QRect(630, 530, 141, 61))
         self.reset_btn.setObjectName("reset_btn")
+        self.full_adress_obj = QtWidgets.QTextBrowser(self.centralwidget)
+        self.full_adress_obj.setGeometry(QtCore.QRect(480, 430, 291, 91))
+        self.full_adress_obj.setObjectName("full_adress_obj")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)

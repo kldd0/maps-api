@@ -79,6 +79,16 @@
      <string>Сбросить</string>
     </property>
    </widget>
+   <widget class="QTextBrowser" name="full_adress_obj">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>430</y>
+      <width>291</width>
+      <height>91</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

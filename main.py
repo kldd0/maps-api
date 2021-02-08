@@ -47,21 +47,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.map_params['spn'] = f'{self.spn},{self.spn}'
                 self.load_map()
         elif event.key() == Qt.Key_Left:
-            self.ll[0] -= self.spn
-            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
-            self.load_map()
+            if self.ll[0] - self.spn > -180:
+                self.ll[0] -= self.spn
+                self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+                self.load_map()
         elif event.key() == Qt.Key_Right:
-            self.ll[0] += self.spn
-            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
-            self.load_map()
+            if self.ll[0] + self.spn < 180:
+                self.ll[0] += self.spn
+                self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+                self.load_map()
         elif event.key() == Qt.Key_Up:
-            self.ll[1] += self.spn
-            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
-            self.load_map()
+            if self.ll[1] + self.spn < 85:
+                self.ll[1] += self.spn
+                self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+                self.load_map()
         elif event.key() == Qt.Key_Down:
-            self.ll[1] -= self.spn
-            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
-            self.load_map()
+            if self.ll[1] - self.spn > -85:
+                self.ll[1] -= self.spn
+                self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+                self.load_map()
 
     def change_map_view(self, text):
         if text == 'схема':
@@ -83,14 +87,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             json_resp = resp.json()
             obj = json_resp['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']
+            obj_adress = obj['metaDataProperty']['GeocoderMetaData']['text']
             obj_coords = obj["Point"]["pos"].split()
             self.map_params['ll'] = ','.join(obj_coords)
             self.map_params['pt'] = ','.join([obj_coords[0], obj_coords[1], 'pm2rdm'])
+            self.full_adress_obj.setText(obj_adress)
             self.load_map()
 
     def reset_search_query(self):
         self.map_params['ll'] = '37.620070,55.753630'
         self.map_params.pop('pt', None)
+        self.full_adress_obj.setText('')
+        self.text_query.setText('')
         self.load_map()
 
 
