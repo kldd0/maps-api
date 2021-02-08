@@ -29,6 +29,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.map_view.activated[str].connect(self.change_map_view)
         self.search.clicked.connect(self.find_object)
         self.reset_btn.clicked.connect(self.reset_search_query)
+        self.postcode = None
+        self.checkBox.clicked.connect(self.show_hide_index)
 
     def load_map(self):
         response = requests.get(MAP_API_SERVER, params=self.map_params)
@@ -89,17 +91,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             obj = json_resp['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']
             obj_adress = obj['metaDataProperty']['GeocoderMetaData']['text']
             obj_coords = obj["Point"]["pos"].split()
-            self.map_params['ll'] = ','.join(obj_coords)
+            try:
+                self.postcode = obj["metaDataProperty"]["GeocoderMetaData"]["Address"]["postal_code"]
+            except KeyError:
+                self.postcode = None
+            self.ll = [float(obj_coords[0]), float(obj_coords[1])]
+            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
             self.map_params['pt'] = ','.join([obj_coords[0], obj_coords[1], 'pm2rdm'])
-            self.full_adress_obj.setText(obj_adress)
+            if self.checkBox.isChecked() and self.postcode:
+                self.full_adress_obj.setText(f'{obj_adress}, {self.postcode}')
+            else:
+                self.full_adress_obj.setText(obj_adress)
             self.load_map()
 
     def reset_search_query(self):
-        self.map_params['ll'] = '37.620070,55.753630'
+        self.ll = [37.617635, 55.755814]
+        self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
         self.map_params.pop('pt', None)
         self.full_adress_obj.setText('')
         self.text_query.setText('')
         self.load_map()
+
+    def show_hide_index(self):
+        if self.checkBox.isChecked() and self.postcode:
+            self.full_adress_obj.setText(f'{self.full_adress_obj.toPlainText()}, {self.postcode}')
+        else:
+            if self.postcode and self.full_adress_obj.toPlainText().endswith(self.postcode):
+                self.full_adress_obj.setText(self.full_adress_obj.toPlainText()[:-8])
 
 
 if __name__ == '__main__':
