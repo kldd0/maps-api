@@ -47,21 +47,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.map_params['spn'] = f'{self.spn},{self.spn}'
                 self.load_map()
         elif event.key() == Qt.Key_Left:
-            self.ll[0] -= self.spn
-            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
-            self.load_map()
+            if self.ll[0] - self.spn > -180:
+                self.ll[0] -= self.spn
+                self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+                self.load_map()
         elif event.key() == Qt.Key_Right:
-            self.ll[0] += self.spn
-            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
-            self.load_map()
+            if self.ll[0] + self.spn < 180:
+                self.ll[0] += self.spn
+                self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+                self.load_map()
         elif event.key() == Qt.Key_Up:
-            self.ll[1] += self.spn
-            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
-            self.load_map()
+            if self.ll[1] + self.spn < 85:
+                self.ll[1] += self.spn
+                self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+                self.load_map()
         elif event.key() == Qt.Key_Down:
-            self.ll[1] -= self.spn
-            self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
-            self.load_map()
+            if self.ll[1] - self.spn > -85:
+                self.ll[1] -= self.spn
+                self.map_params['ll'] = f'{self.ll[0]},{self.ll[1]}'
+                self.load_map()
 
     def change_map_view(self, text):
         if text == 'схема':
