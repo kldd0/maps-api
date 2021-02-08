@@ -28,6 +28,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.load_map()
         self.map_view.activated[str].connect(self.change_map_view)
         self.search.clicked.connect(self.find_object)
+        self.reset_btn.clicked.connect(self.reset_search_query)
 
     def load_map(self):
         response = requests.get(MAP_API_SERVER, params=self.map_params)
@@ -86,6 +87,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.map_params['ll'] = ','.join(obj_coords)
             self.map_params['pt'] = ','.join([obj_coords[0], obj_coords[1], 'pm2rdm'])
             self.load_map()
+
+    def reset_search_query(self):
+        self.map_params['ll'] = '37.620070,55.753630'
+        self.map_params.pop('pt', None)
+        self.load_map()
 
 
 if __name__ == '__main__':

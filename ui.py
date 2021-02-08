@@ -18,10 +18,12 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(10, 10, 600, 400))
+        self.label.setFocusPolicy(QtCore.Qt.TabFocus)
         self.label.setText("")
         self.label.setObjectName("label")
         self.map_view = QtWidgets.QComboBox(self.centralwidget)
         self.map_view.setGeometry(QtCore.QRect(640, 10, 131, 21))
+        self.map_view.setFocusPolicy(QtCore.Qt.NoFocus)
         self.map_view.setObjectName("map_view")
         self.search = QtWidgets.QPushButton(self.centralwidget)
         self.search.setGeometry(QtCore.QRect(10, 470, 131, 41))
@@ -29,6 +31,9 @@ class Ui_MainWindow(object):
         self.text_query = QtWidgets.QLineEdit(self.centralwidget)
         self.text_query.setGeometry(QtCore.QRect(10, 430, 271, 31))
         self.text_query.setObjectName("text_query")
+        self.reset_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.reset_btn.setGeometry(QtCore.QRect(630, 530, 141, 61))
+        self.reset_btn.setObjectName("reset_btn")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -38,3 +43,4 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Большая задача по Maps API"))
         self.search.setText(_translate("MainWindow", "Искать"))
+        self.reset_btn.setText(_translate("MainWindow", "Сбросить"))
